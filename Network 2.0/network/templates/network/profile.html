@@ -1,0 +1,41 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>{{ user.username }}'s Profile</h1>
+            <div class="mt-4">
+                <h3>Followers: {{ followers_count }}</h3>
+                <ul class="list-group">
+                    {% for follower in followers %}
+                        <li class="list-group-item"><a href="{% url 'user_page' user_id=follower.follower.pk %}">{{ follower.follower.username }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="mt-4">
+                <h3>Following: {{ following_count }}</h3>
+                <ul class="list-group">
+                    {% for followed in following %}
+                        <li class="list-group-item"><a href="{% url 'user_page' user_id=followed.followed_user.pk %}">{{ followed.followed_user.username }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <h2 class="mt-4">Posts</h2>
+            <div class="list-group">
+                {% for post in user_posts %}
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ post.content }}</h5>
+                            <small>{{ post.created_at }}</small>
+                        </div>
+                    </a>
+                {% empty %}
+                    <p class="mt-3">No posts yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

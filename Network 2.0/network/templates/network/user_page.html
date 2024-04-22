@@ -1,0 +1,62 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>{{ user.username }}</h1>
+            {% if user.is_authenticated %}
+                {% if user != user_page %}
+                    <div class="mt-3">
+                        {% if is_following %}
+                            <form action="{% url 'unfollow' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="userfollow" value="{{ user_profile.pk }}">
+                                <button type="submit" class="btn btn-danger">Unfollow</button>
+                            </form>
+                        {% else %}
+                            <form action="{% url 'follow' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="userfollow" value="{{ user_profile.pk }}">
+                                <button type="submit" class="btn btn-primary">Follow</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endif %}
+            <div class="mt-4">
+                <h3>Followers: {{ followers_count }}</h3>
+                <ul class="list-group">
+                    {% for follower in followers %}
+                        <li class="list-group-item">{{ follower.username }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="mt-4">
+                <h3>Following: {{ following_count }}</h3>
+                <ul class="list-group">
+                    {% for followed in following %}
+                        <li class="list-group-item">{{ followed.username }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h2>User's Posts</h2>
+            <div class="list-group">
+                {% for post in posts %}
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ post.content }}</h5>
+                            <small>{{ post.created_at }}</small>
+                        </div>
+                    </a>
+                {% empty %}
+                    <p class="mt-3">No posts yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
